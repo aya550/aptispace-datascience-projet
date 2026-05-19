@@ -41,7 +41,20 @@ link-citations: true
 - *En quoi ce sujet de recherche est-il pertinent et stratégique ?*
 - *Pourquoi l'analyse quantitative de ce jeu de données est-elle indispensable pour répondre à votre problématique ?*
 
-[Rédiger votre paragraphe de contexte ici]
+[Aujourd'hui, la musique se consomme principalement en streaming, 
+et Spotify s'est imposé comme le leader mondial avec plus de 
+600 millions d'utilisateurs. Chaque jour, des milliers d'artistes 
+publient de nouveaux titres sur la plateforme, mais la grande 
+majorité passe inaperçue. Qu'est-ce qui fait vraiment qu'une 
+chanson devient populaire ?
+
+C'est la question centrale de notre projet. En analysant le 
+Spotify Tracks Dataset — 114 000 chansons issues de 114 genres 
+musicaux différents — nous cherchons à comprendre si les 
+caractéristiques audio d'une chanson (énergie, dansabilité, 
+tempo, volume...) permettent de prédire sa popularité. Un enjeu 
+concret pour les artistes, les labels et les plateformes de 
+streaming qui cherchent à mieux comprendre leur audience.]
 
 ## Objectif Analytique
 *À rédiger par les étudiants — Pistes de réflexion :*
@@ -50,7 +63,19 @@ link-citations: true
 - *Comment le couplage de données multi-sources et l'intégration de différents types de données (tabulaires, images, signaux, etc.) enrichissent-ils l'analyse ?*
 - *Quels sont les livrables analytiques attendus pour répondre à votre problématique et guider les prises de décisions ?*
 
-[Rédiger votre paragraphe d'objectifs ici]
+[Notre objectif est de prédire la popularité d'une chanson à 
+partir de ses caractéristiques musicales mesurables. La variable 
+cible est `popularity` (score de 0 à 100), ce qui en fait une 
+tâche de régression, complétée par une classification binaire 
+via la variable `is_popular` que nous avons créée.
+
+Nos analyses ont révélé un résultat surprenant : aucune 
+caractéristique musicale n'influence vraiment la popularité 
+(tous les coefficients de corrélation sont proches de 0). 
+Ce sont donc d'autres facteurs — la notoriété de l'artiste, 
+le marketing ou l'algorithme Spotify — qui jouent le rôle 
+décisif. Notre modèle de Machine Learning viendra confirmer 
+ou infirmer cette hypothèse.]
 
 ---
 
