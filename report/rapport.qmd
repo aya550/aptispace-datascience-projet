@@ -2,9 +2,9 @@
 title: "Mon Projet Data Science"
 subtitle: "Projet Fil Rouge Data Science - Sujet Libre"
 author:
-  - "Étudiant(e) 1 : [DANIELLE JAMILA KOAGNE NGANKAM]"
-  - "Étudiant(e) 2 : [JACQUELINE MAPENZI]"
-  - "Étudiant(e) 3 : [Aya SGHAIER]"
+  - "Étudiant(e) 1 : DANIELLE JAMILA KOAGNE NGANKAM "
+  - "Étudiant(e) 2 : JACQUELINE MAPENZI "
+  - "Étudiant(e) 3 : Aya SGHAIER"
 date: today
 format:
   html:
@@ -41,7 +41,7 @@ link-citations: true
 - *En quoi ce sujet de recherche est-il pertinent et stratégique ?*
 - *Pourquoi l'analyse quantitative de ce jeu de données est-elle indispensable pour répondre à votre problématique ?*
 
-[Aujourd'hui, la musique se consomme principalement en streaming, 
+Aujourd'hui, la musique se consomme principalement en streaming, 
 et Spotify s'est imposé comme le leader mondial avec plus de 
 600 millions d'utilisateurs. Chaque jour, des milliers d'artistes 
 publient de nouveaux titres sur la plateforme, mais la grande 
@@ -54,7 +54,7 @@ musicaux différents — nous cherchons à comprendre si les
 caractéristiques audio d'une chanson (énergie, dansabilité, 
 tempo, volume...) permettent de prédire sa popularité. Un enjeu 
 concret pour les artistes, les labels et les plateformes de 
-streaming qui cherchent à mieux comprendre leur audience.]
+streaming qui cherchent à mieux comprendre leur audience.
 
 ## Objectif Analytique
 *À rédiger par les étudiants — Pistes de réflexion :*
@@ -63,7 +63,7 @@ streaming qui cherchent à mieux comprendre leur audience.]
 - *Comment le couplage de données multi-sources et l'intégration de différents types de données (tabulaires, images, signaux, etc.) enrichissent-ils l'analyse ?*
 - *Quels sont les livrables analytiques attendus pour répondre à votre problématique et guider les prises de décisions ?*
 
-[Notre objectif est de prédire la popularité d'une chanson à 
+Notre objectif est de prédire la popularité d'une chanson à 
 partir de ses caractéristiques musicales mesurables. La variable 
 cible est `popularity` (score de 0 à 100), ce qui en fait une 
 tâche de régression, complétée par une classification binaire 
@@ -75,7 +75,7 @@ caractéristique musicale n'influence vraiment la popularité
 Ce sont donc d'autres facteurs — la notoriété de l'artiste, 
 le marketing ou l'algorithme Spotify — qui jouent le rôle 
 décisif. Notre modèle de Machine Learning viendra confirmer 
-ou infirmer cette hypothèse.]
+ou infirmer cette hypothèse.
 
 ---
 
