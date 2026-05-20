@@ -2,15 +2,15 @@ name: CI Compilation Pipeline
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Autorise le push automatique des commits par GitHub Actions
+      contents: write # Autorise le push automatique des commits par GitHub Actions
 
     steps:
       - name: Checkout repository
@@ -22,15 +22,15 @@ jobs:
         run: |
           CURRENT_REPO="${{ github.repository }}"
           echo "Current Repository detected: $CURRENT_REPO"
-          
+
           # Remplace l'URL du dépôt parent par celle du dépôt actuel (fork) dans le fichier source
           sed -i "s|aptitek/aptispace-datascience-projet|$CURRENT_REPO|g" report/rapport.qmd
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-          cache: 'pip'
+          python-version: "3.12"
+          cache: "pip"
 
       - name: Install Python dependencies
         run: |
@@ -57,17 +57,17 @@ jobs:
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           # Force update tag 'latest' locally and push it
           git tag -f latest
           git push -f origin latest
-          
+
           # Prepare the GFM report as README.md in the release assets
           cp build/report/rapport.md build/report/README.md
-          
+
           # Delete the old release if it exists
           gh release delete latest --yes || true
-          
+
           # Create new rolling release with all assets
           gh release create latest \
             build/report/rapport.pdf \
