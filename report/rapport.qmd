@@ -3,8 +3,8 @@ title: "Mon Projet Data Science"
 subtitle: "Projet Fil Rouge Data Science - Sujet Libre"
 author:
   - "Étudiant(e) 1 : DANIELLE JAMILA KOAGNE NGANKAM "
-  - "Étudiant(e) 2 : JACQUELINE MAPENZI - "
-  - "Étudiant(e) 3 : Aya SGHAIER -"
+  - "Étudiant(e) 2 : JACQUELINE MAPENZI"
+  - "Étudiant(e) 3 : Aya SGHAIER"
 date: today
 format:
   html:
