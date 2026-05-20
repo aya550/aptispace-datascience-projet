@@ -19,6 +19,7 @@ tasks:
       - quarto render report/rapport.qmd
       - rm -rf report/slides_files/ report/rapport_files/ report/installation_files/
       - cp build/report/rapport.pdf report/rapport.pdf
+      - cp build/report/rapport.md ./README.md
 
   html:
     desc: Compile les notebooks puis génère le rapport au format HTML uniquement
@@ -41,6 +42,7 @@ tasks:
       - task: compile
       - quarto render report/rapport.qmd --to gfm
       - rm -rf report/slides_files/ report/rapport_files/ report/installation_files/
+      - cp build/report/rapport.md ./README.md
 
   preview:
     desc: Compile les notebooks puis démarre le serveur de prévisualisation dynamique Quarto
@@ -49,10 +51,11 @@ tasks:
       - quarto preview report/rapport.qmd
 
   install-guide:
-    desc: Génère le guide d'installation sous tous les formats (HTML, PDF, Markdown)
+    desc: Génère le guide d'installation sous tous les formats (HTML, PDF, Markdown) et met à jour INSTALL.md à la racine
     cmds:
       - quarto render report/installation.qmd
       - rm -rf report/slides_files/ report/rapport_files/ report/installation_files/
+      - cp build/report/INSTALL.md ./INSTALL.md
 
   clean:
     desc: "Nettoie tous les fichiers temporaires de compilation, le dossier build et les ressources Quarto (conserve le PDF du rapport)"
