@@ -157,6 +157,7 @@ Ci-dessous est intégré le squelette de votre diaporama de soutenance RevealJS.
 <iframe src="slides.html" width="100%" height="500px" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white;"></iframe>
 
 ### 📊 Exemple de Dashboard Dynamique (OJS / Plotly)
+::: {.content-visible unless-format="pdf"}
 Voici un exemple minimal de code montrant comment intégrer un graphique dynamique contrôlé par un composant d'interface utilisateur en Observable JS (OJS).
 
 ```{ojs}
@@ -206,7 +207,9 @@ Plotly.newPlot('dynamic-chart', [{
 })
 ```
 
-<div id="dynamic-chart" style="width:100%; height:400px; background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);"></div>
+::: {#dynamic-chart style="width:100%; height:400px; background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);"}
+:::
+:::
 
 :::
 

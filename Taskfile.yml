@@ -10,6 +10,7 @@ tasks:
     desc: "Compile les notebooks (.ipynb) en 3 fichiers : .qmd (Quarto), .py (Script), .log (Journal d'exécution)"
     cmds:
       - python3 tools/compile_notebooks.py
+      - python3 tools/compile_ojs_in_markdown.py build/report/rapport.md
 
   render:
     desc: Compile d'abord les notebooks puis génère le rapport complet dans tous les formats déclarés
@@ -17,9 +18,9 @@ tasks:
       - task: compile
       - quarto render report/slides.qmd
       - quarto render report/rapport.qmd
+      - python3 tools/compile_ojs_in_markdown.py build/report/rapport.md
       - rm -rf report/slides_files/ report/rapport_files/ report/installation_files/
-      - cp build/report/rapport.pdf report/rapport.pdf
-      - cp build/report/rapport.md ./README.md
+      - task: zip
 
   html:
     desc: Compile les notebooks puis génère le rapport au format HTML uniquement
@@ -34,15 +35,20 @@ tasks:
       - task: compile
       - quarto render report/rapport.qmd --to typst
       - rm -rf report/slides_files/ report/rapport_files/ report/installation_files/
-      - cp build/report/rapport.pdf report/rapport.pdf
 
   gfm:
     desc: Compile les notebooks puis génère le rapport en GFM (Markdown) uniquement
     cmds:
       - task: compile
       - quarto render report/rapport.qmd --to gfm
+      - python3 tools/compile_ojs_in_markdown.py build/report/rapport.md
       - rm -rf report/slides_files/ report/rapport_files/ report/installation_files/
-      - cp build/report/rapport.md ./README.md
+
+  zip:
+    desc: Compresse les logs et les scripts sources compilés en fichiers ZIP dans le dossier build
+    cmds:
+      - (cd build && zip -r logs.zip logs)
+      - (cd build && zip -r sources.zip src)
 
   preview:
     desc: Compile les notebooks puis démarre le serveur de prévisualisation dynamique Quarto
