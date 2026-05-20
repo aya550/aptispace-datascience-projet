@@ -1,6 +1,6 @@
 # Mon Projet Data Science
-Étudiant(e) 1 : \[Insérer Prénom Nom\], Étudiant(e) 2 : \[Insérer Prénom
-Nom\], Étudiant(e) 3 : \[Insérer Prénom Nom\]
+Étudiant(e) 1 : \[DANIELLE JAMILA KOAGNE NGANKAM\], Étudiant(e) 2 :
+\[JACQUELINE MAPENZI\], Étudiant(e) 3 : \[Aya SGHAIER\]
 2026-05-20
 
 - [Introduction et Contexte Métier](#sec-intro)
@@ -22,6 +22,8 @@ Nom\], Étudiant(e) 3 : \[Insérer Prénom Nom\]
     Visuelle](#chapitre-3--travaux-pratiques-dexploration-visuelle)
 - [📊 Étape 4 : Visualisation Multidimensionnelle (Squelette
   Étudiant)](#bar_chart-étape-4--visualisation-multidimensionnelle-squelette-étudiant)
+- [📊 Étape 4 : Visualisation Multidimensionnelle (Squelette
+  Étudiant)](#bar_chart-étape-4--visualisation-multidimensionnelle-squelette-étudiant-1)
 - [Analyse Exploratoire des Données (EDA)](#sec-eda)
   - [Chapitre 4 : Travaux Pratiques d’Exploration
     (EDA)](#chapitre-4--travaux-pratiques-dexploration-eda)
@@ -69,7 +71,20 @@ décision sur la base de vos données.*
 - *Pourquoi l’analyse quantitative de ce jeu de données est-elle
   indispensable pour répondre à votre problématique ?*
 
-\[Rédiger votre paragraphe de contexte ici\]
+\[Aujourd’hui, la musique se consomme principalement en streaming, et
+Spotify s’est imposé comme le leader mondial avec plus de 600 millions
+d’utilisateurs. Chaque jour, des milliers d’artistes publient de
+nouveaux titres sur la plateforme, mais la grande majorité passe
+inaperçue. Qu’est-ce qui fait vraiment qu’une chanson devient populaire
+?
+
+C’est la question centrale de notre projet. En analysant le Spotify
+Tracks Dataset — 114 000 chansons issues de 114 genres musicaux
+différents — nous cherchons à comprendre si les caractéristiques audio
+d’une chanson (énergie, dansabilité, tempo, volume…) permettent de
+prédire sa popularité. Un enjeu concret pour les artistes, les labels et
+les plateformes de streaming qui cherchent à mieux comprendre leur
+audience.\]
 
 ## Objectif Analytique
 
@@ -83,7 +98,18 @@ décision sur la base de vos données.*
 - *Quels sont les livrables analytiques attendus pour répondre à votre
   problématique et guider les prises de décisions ?*
 
-\[Rédiger votre paragraphe d’objectifs ici\]
+\[Notre objectif est de prédire la popularité d’une chanson à partir de
+ses caractéristiques musicales mesurables. La variable cible est
+`popularity` (score de 0 à 100), ce qui en fait une tâche de régression,
+complétée par une classification binaire via la variable `is_popular`
+que nous avons créée.
+
+Nos analyses ont révélé un résultat surprenant : aucune caractéristique
+musicale n’influence vraiment la popularité (tous les coefficients de
+corrélation sont proches de 0). Ce sont donc d’autres facteurs — la
+notoriété de l’artiste, le marketing ou l’algorithme Spotify — qui
+jouent le rôle décisif. Notre modèle de Machine Learning viendra
+confirmer ou infirmer cette hypothèse.\]
 
 ------------------------------------------------------------------------
 
@@ -186,6 +212,13 @@ tracé `src.utils_viz`.
 ### 1. Préparation de l’environnement
 
 ### 2. Chargement du dataset enrichi
+
+# 📊 Étape 4 : Visualisation Multidimensionnelle (Squelette Étudiant)
+
+Cette étape correspond au quatrième chapitre du cours. L’objectif est de
+concevoir des représentations visuelles premium pour identifier des
+tendances et insights clés à l’aide de votre package personnalisé de
+tracé `src.utils_viz`.
 
 ### 3. Tracés et analyses graphiques
 
