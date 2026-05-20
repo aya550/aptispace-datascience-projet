@@ -1,6 +1,6 @@
 # 📊 Mon Projet Data Science
 
-[![CI Compilation Pipeline](https://github.com/aptitek/aptispace-datascience-projet/actions/workflows/ci.yml/badge.svg)](https://github.com/aptitek/aptispace-datascience-projet/actions/workflows/ci.yml)
+[![CI Compilation Pipeline](https://github.com/aya550/aptispace-datascience-projet/actions/workflows/ci.yml/badge.svg)](https://github.com/aya550/aptispace-datascience-projet/actions/workflows/ci.yml)
 [GitHub Release](../../releases/latest)
 [Quarto](https://quarto.org)
 [Typst](https://typst.app)
@@ -17,15 +17,15 @@
 
 Les rapports compilés dans tous les formats, ainsi que le code source exécutable et ses journaux, sont mis à jour en temps réel à chaque push et disponibles au téléchargement sur la **[dernière version du Release GitHub](../../releases/latest)**.
 
-| Format | Description | Lien de Téléchargement |
-| :--- | :--- | :--- |
-| **📄 Rapport PDF** | Rapport complet mis en page de haute qualité via **Typst** | [**Télécharger le PDF**](../../releases/download/latest/rapport.pdf) |
-| **🌐 Rapport Interactif** | Rapport HTML complet intégrant le tableau de bord dynamique **Observable JS (OJS)** | [**Télécharger l'HTML**](../../releases/download/latest/rapport.html) |
-| **📝 Rapport Markdown** | Version de lecture rapide optimisée pour l'affichage GitHub | [**Consulter le Markdown**](../../releases/download/latest/README.md) |
-| **🧠 Scripts Python** | Archive compressée des scripts extraits de tous les notebooks | [**Télécharger les Sources (.zip)**](../../releases/download/latest/sources.zip) |
-| **🪵 Journaux d'Exécution** | Archive de tous les logs de compilation et d'exécution | [**Télécharger les Logs (.zip)**](../../releases/download/latest/logs.zip) |
+| Format                      | Description                                                                         | Lien de Téléchargement                                                           |
+| :-------------------------- | :---------------------------------------------------------------------------------- | :------------------------------------------------------------------------------- |
+| **📄 Rapport PDF**          | Rapport complet mis en page de haute qualité via **Typst**                          | [**Télécharger le PDF**](../../releases/download/latest/rapport.pdf)             |
+| **🌐 Rapport Interactif**   | Rapport HTML complet intégrant le tableau de bord dynamique **Observable JS (OJS)** | [**Télécharger l'HTML**](../../releases/download/latest/rapport.html)            |
+| **📝 Rapport Markdown**     | Version de lecture rapide optimisée pour l'affichage GitHub                         | [**Consulter le Markdown**](../../releases/download/latest/README.md)            |
+| **🧠 Scripts Python**       | Archive compressée des scripts extraits de tous les notebooks                       | [**Télécharger les Sources (.zip)**](../../releases/download/latest/sources.zip) |
+| **🪵 Journaux d'Exécution** | Archive de tous les logs de compilation et d'exécution                              | [**Télécharger les Logs (.zip)**](../../releases/download/latest/logs.zip)       |
 
-*Note : Si vous avez forké ce dépôt, vos propres compilations seront disponibles dans l'onglet **Releases** de votre propre dépôt GitHub après l'exécution du pipeline Actions.*
+_Note : Si vous avez forké ce dépôt, vos propres compilations seront disponibles dans l'onglet **Releases** de votre propre dépôt GitHub après l'exécution du pipeline Actions._
 
 ---
 
@@ -60,11 +60,13 @@ Toutes les tâches du projet sont orchestrées simplement via le gestionnaire de
 ### 1. Prérequis
 
 Assurez-vous d'avoir installé :
+
 - [Python 3.12](https://www.python.org/)
 - [Quarto CLI](https://quarto.org/docs/get-started/)
 - [Go-Task](https://taskfile.dev/installation/)
 
 Installez ensuite les dépendances du projet :
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -73,19 +75,19 @@ pip install -r requirements.txt
 
 Depuis la racine du projet, lancez :
 
-* **Compiler l'intégralité du pipeline et des rapports** (génère tout dans `build/`) :
+- **Compiler l'intégralité du pipeline et des rapports** (génère tout dans `build/`) :
   ```bash
   task render
   ```
-* **Prévisualiser dynamiquement le rapport dans le navigateur** (rechargement automatique lors de la saisie) :
+- **Prévisualiser dynamiquement le rapport dans le navigateur** (rechargement automatique lors de la saisie) :
   ```bash
   task preview
   ```
-* **Compiler uniquement le guide d'installation** :
+- **Compiler uniquement le guide d'installation** :
   ```bash
   task install-guide
   ```
-* **Nettoyer tous les fichiers temporaires et compilations locales** :
+- **Nettoyer tous les fichiers temporaires et compilations locales** :
   ```bash
   task clean
   ```
