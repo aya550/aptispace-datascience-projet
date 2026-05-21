@@ -16,4 +16,4 @@ jupyter
 quarto
 
 # Pour importer les datasets
-kagglehub
+kagglehubtensorflow-cpu==2.21.0
