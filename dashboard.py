@@ -75,14 +75,25 @@ fig_corr.update_layout(
 )
 
 # Graphique 4 — Distribution popularite
+ 
 fig_distrib = px.histogram(
     df_feat, x='popularity', nbins=30,
     title="Distribution de la Popularite",
-    color_discrete_sequence=["#20D200"]
+    color_discrete_sequence=['#1DB954'],
+    opacity=0.8
 )
 fig_distrib.update_layout(
-    plot_bgcolor='#111111', paper_bgcolor='#1a1a1a',
-    font_color='white'
+    plot_bgcolor='#121212',
+    paper_bgcolor='#181818',
+    font_color='white',
+    bargap=0.1,
+    xaxis=dict(title='Popularite', gridcolor='#282828'),
+    yaxis=dict(title='Nombre de chansons', gridcolor='#282828'),
+    title_font_size=16
+)
+fig_distrib.update_traces(
+    marker_line_color='#121212',
+    marker_line_width=2
 )
 
 # Graphique 5 — Boxplot top 10 genres
@@ -153,16 +164,27 @@ fig_reel.update_layout(
 
 # Graphique 8 — Distribution des erreurs
 erreurs = y_test - y_pred
-fig_erreurs = px.histogram(
-    x=erreurs, nbins=40,
-    title="Distribution des erreurs de prediction",
-    labels={'x': 'Erreur (Reel - Predit)'},
-    color_discrete_sequence=['#1DB954']
-)
-fig_erreurs.add_vline(x=0, line_dash='dash', line_color='red')
+fig_erreurs = go.Figure(data=[
+    go.Histogram(
+        x=erreurs,
+        nbinsx=40,
+        marker_color='#1DB954',
+        opacity=0.8,
+        marker_line_color='#121212',
+        marker_line_width=2
+    )
+])
+fig_erreurs.add_vline(x=0, line_dash='dash', line_color='red', line_width=2)
 fig_erreurs.update_layout(
-    plot_bgcolor='#111111', paper_bgcolor='#1a1a1a',
-    font_color='white'
+    title="Distribution des erreurs de prediction",
+    xaxis_title='Erreur (Reel - Predit)',
+    yaxis_title='Nombre de predictions',
+    plot_bgcolor='#121212',
+    paper_bgcolor='#181818',
+    font_color='white',
+    bargap=0.1,
+    xaxis=dict(gridcolor='#282828'),
+    yaxis=dict(gridcolor='#282828')
 )
 
 # METRIQUES
