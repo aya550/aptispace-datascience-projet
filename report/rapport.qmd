@@ -21,6 +21,14 @@ format:
   typst:
     toc: true
     number-sections: true
+    papersize: a4
+    margin:
+      x: 2.5cm
+      y: 2.5cm
+    fontsize: 11pt
+    include-in-header:
+      text: |
+        #show table: set text(size: 8pt)
   gfm:
     output-file: "rapport.md"
     toc: true
@@ -28,11 +36,23 @@ format:
 execute:
   eval: true
   echo: false
+  output: false
   warning: false
   message: false
+  error: true
 bibliography: references.bib
 link-citations: true
 ---
+
+```{python}
+#| echo: false
+#| output: false
+# Configuration globale de Pandas pour éviter que les tableaux 
+# ne débordent de la page PDF (Typst)
+import pandas as pd
+pd.set_option('display.max_columns', 5)
+pd.set_option('display.max_colwidth', 12)
+```
 
 # Introduction et Contexte Métier {#sec-intro}
 
@@ -40,20 +60,10 @@ link-citations: true
 
 Aujourd'hui, la musique se consomme principalement en streaming, et 
 Spotify s'est imposé comme le leader mondial avec plus de 600 millions 
-d'utilisateurs actifs. Chaque jour, des milliers d'artistes publient de 
-nouveaux titres sur la plateforme, mais la grande majorité passe 
-complètement inaperçue. Une question se pose alors naturellement : 
-qu'est-ce qui fait vraiment qu'une chanson devient populaire ?
+d'utilisateurs actifs. Récemment, une nouvelle dynamique a bouleversé l'industrie : les **trends de danse sur les réseaux sociaux** (comme TikTok). C'est devenu une véritable stratégie marketing de lancer une trend avant même la sortie officielle d'un titre pour booster sa popularité.
 
-C'est exactement la question que nous avons décidé d'explorer dans ce 
-projet. En analysant le Spotify Tracks Dataset — un jeu de données 
-contenant 114 000 chansons issues de 114 genres musicaux différents — 
-nous cherchons à comprendre si les caractéristiques audio mesurables 
-d'une chanson (son énergie, sa dansabilité, son tempo, son volume...) 
-permettent de prédire sa popularité. Un enjeu très concret pour les 
-artistes indépendants, les labels musicaux et les plateformes de 
-streaming qui cherchent à mieux comprendre ce qui résonne avec leur 
-audience.
+Cependant, pour qu'une trend fonctionne, il faut que les caractéristiques intrinsèques de la chanson s'y prêtent (sa *danceability*, son tempo, son énergie). C'est précisément l'objectif de notre étude : **évaluer à quel point les caractéristiques musicales pures (et notamment la dansabilité) impactent la popularité d'une chanson, indépendamment du budget marketing ou de la notoriété préalable de l'artiste.**
+
 
 ## Objectif Analytique
 
@@ -144,6 +154,8 @@ graph TD
 
 ## Présentation des Résultats (Livrables Interactifs)
 
+::: {.content-visible unless-format="typst"}
+
 ::: {.panel-tabset}
 
 ### 📺 Diaporama de Soutenance (RevealJS)
@@ -152,7 +164,7 @@ Ci-dessous est intégré le squelette de votre diaporama de soutenance RevealJS.
 <iframe src="slides.html" width="100%" height="500px" style="border: 1px solid #e2e8f0; border-radius: 8px; background: white;"></iframe>
 
 ### 📊 Exemple de Dashboard Dynamique (OJS / Plotly)
-::: {.content-visible unless-format="pdf"}
+
 Voici un exemple minimal de code montrant comment intégrer un graphique dynamique contrôlé par un composant d'interface utilisateur en Observable JS (OJS).
 
 ```{ojs}
@@ -179,12 +191,10 @@ data = [
   {timestamp: "2026-05-18T16:00:00Z", value: 30.2, category: "C"}
 ]
 
-// Filtrage réactif de la donnée
-filteredData = selectedCategory === "Toutes" 
-  ? data 
+filteredData = selectedCategory === "Toutes"
+  ? data
   : data.filter(d => d.category === selectedCategory)
 
-// Tracé interactif avec la librairie Plotly
 Plotly.newPlot('dynamic-chart', [{
   x: filteredData.map(d => d.timestamp),
   y: filteredData.map(d => d.value),
@@ -204,8 +214,13 @@ Plotly.newPlot('dynamic-chart', [{
 
 ::: {#dynamic-chart style="width:100%; height:400px; background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);"}
 :::
+
 :::
 
+:::
+
+::: {.content-visible when-format="typst"}
+*Les livrables interactifs (diaporama RevealJS, dashboard dynamique) sont disponibles dans la version HTML du rapport.*
 :::
 
 ---
@@ -218,13 +233,28 @@ Dans une démarche de transparence scientifique et académique, cette section d�
 
 | Outil d'IA | Cas d'usage (Pourquoi ?) | Méthode d'utilisation (Comment ?) | Rôle et Validation Humaine |
 | :--- | :--- | :--- | :--- |
-| **[Outil d'IA]** | *[À compléter par les étudiants]* | *[À compléter par les étudiants]* | *[À compléter par les étudiants]* |
+| **Gemini / ChatGPT** | Compréhension du code, débogage Quarto/Typst, et structuration du storytelling | Prompts itératifs pour débloquer des erreurs spécifiques (ex: tableaux superposés) et aide à la synthèse | Vérification manuelle de chaque bloc de code suggéré et réécriture des textes pour correspondre au contexte. |
+| **GitHub Copilot (ou équivalent)** | Accélération de l'écriture du code Pandas / Plotly dans les notebooks | Autocomplétion lors de l'Analyse Exploratoire (EDA) et de la création de graphiques | Relecture du code généré pour s'assurer de la justesse des calculs statistiques. |
+
+: Cartographie de l'utilisation des outils IA {tbl-colwidths="[15,30,30,25]"}
 
 ## Principes de Rigueur et Responsabilité
 
 1. **Responsabilité intellectuelle** : L'équipe assume l'entière responsabilité des analyses, des choix de modèles et des conclusions présentées dans ce rapport.
 2. **Lutte contre les hallucinations** : Chaque suggestion technique a fait l'objet d'une validation empirique.
 3. **Protection des données** : Aucun jeu de données confidentiel ou sensible n'a été soumis à des modèles tiers en ligne.
+
+---
+
+# Conclusion Générale {#sec-conclusion}
+
+L'objectif initial de ce projet était de vérifier si des caractéristiques musicales, en particulier la **dansabilité (danceability)**, étaient suffisantes pour garantir le succès d'un titre, notamment à l'ère des trends sur les réseaux sociaux. 
+
+Nos phases d'Analyse Exploratoire (EDA) et de Modélisation ont révélé des résultats particulièrement intéressants :
+- **Une corrélation faible mais existante** : Contrairement aux idées reçues, la corrélation linéaire directe entre la `danceability` et la `popularity` n'est pas absolue (environ 0.06 dans nos données globales). Une musique "dansante" n'est donc pas automatiquement populaire.
+- **Le poids du contexte** : Nos modèles de Machine Learning démontrent que les caractéristiques audio seules ne suffisent pas à prédire parfaitement le succès (R² de 0.446). Les erreurs de prédiction parfois importantes (différence significative entre MAE et RMSE) prouvent que le succès est très volatil pour un même profil musical.
+
+**Bilan métier** : Bien qu'avoir une musique avec une forte `danceability` soit un **prérequis** essentiel pour lancer une trend marketing (sur TikTok ou Reels), ce n'est pas le moteur principal de la popularité globale. Le succès final reste massivement dicté par des facteurs externes non-musicaux : la stratégie marketing du label, la base de fans existante de l'artiste et les algorithmes de recommandation des plateformes.
 
 ---
 

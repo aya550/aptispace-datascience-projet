@@ -18,6 +18,7 @@ dash-bootstrap-components
 # Outils de développement
 ipykernel
 jupyter
+jupyter-cache
 quarto
 
 # Pour importer les datasets

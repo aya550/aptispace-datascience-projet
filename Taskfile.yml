@@ -9,39 +9,43 @@ tasks:
   compile:
     desc: "Compile les notebooks (.ipynb) en 3 fichiers : .qmd (Quarto), .py (Script), .log (Journal d'exécution)"
     cmds:
-      - python3 tools/compile_notebooks.py
-      - python3 tools/compile_ojs_in_markdown.py build/report/rapport.md
+      - py tools/compile_notebooks.py
+
+  logs:
+    desc: "Exécute les scripts Python compilés et génère les journaux d'exécution (.log)"
+    cmds:
+      - py tools/compile_notebooks.py --with-logs
 
   render:
-    desc: Compile d'abord les notebooks puis génère le rapport complet dans tous les formats déclarés
+    desc: "Rendu complet (tous formats : HTML + PDF + GFM) — pour la livraison finale"
     cmds:
       - task: compile
       - quarto render report/slides.qmd
       - quarto render report/rapport.qmd
-      - python3 tools/compile_ojs_in_markdown.py build/report/rapport.md
+      - py tools/compile_ojs_in_markdown.py build/report/rapport.md
       - rm -rf report/slides_files/ report/rapport_files/ report/installation_files/
       - task: zip
 
   html:
-    desc: Compile les notebooks puis génère le rapport au format HTML uniquement
+    desc: "Rendu rapide HTML uniquement — recommandé pour le développement quotidien"
     cmds:
       - task: compile
       - quarto render report/rapport.qmd --to html
       - rm -rf report/slides_files/ report/rapport_files/ report/installation_files/
 
   pdf:
-    desc: Compile les notebooks puis génère le rapport au format PDF (via Typst) uniquement
+    desc: "Rendu PDF uniquement (via Typst)"
     cmds:
       - task: compile
       - quarto render report/rapport.qmd --to typst
       - rm -rf report/slides_files/ report/rapport_files/ report/installation_files/
 
   gfm:
-    desc: Compile les notebooks puis génère le rapport en GFM (Markdown) uniquement
+    desc: "Rendu Markdown (GFM) uniquement"
     cmds:
       - task: compile
       - quarto render report/rapport.qmd --to gfm
-      - python3 tools/compile_ojs_in_markdown.py build/report/rapport.md
+      - py tools/compile_ojs_in_markdown.py build/report/rapport.md
       - rm -rf report/slides_files/ report/rapport_files/ report/installation_files/
 
   zip:
