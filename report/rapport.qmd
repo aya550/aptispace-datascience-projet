@@ -58,30 +58,36 @@ pd.set_option('display.max_colwidth', 12)
 
 ## Contexte du Projet
 
-Aujourd'hui, la musique se consomme principalement en streaming, et 
-Spotify s'est imposé comme le leader mondial avec plus de 600 millions 
-d'utilisateurs actifs. Récemment, une nouvelle dynamique a bouleversé l'industrie : les **trends de danse sur les réseaux sociaux** (comme TikTok). C'est devenu une véritable stratégie marketing de lancer une trend avant même la sortie officielle d'un titre pour booster sa popularité.
+Aujourd'hui, la musique se consomme principalement en streaming, et
+Spotify s'est imposé comme le leader mondial avec plus de 600 millions
+d'utilisateurs actifs. Une question fondamentale se pose pour les artistes,
+labels et plateformes : **qu'est-ce qui rend réellement un morceau populaire ?**
 
-Cependant, pour qu'une trend fonctionne, il faut que les caractéristiques intrinsèques de la chanson s'y prêtent (sa *danceability*, son tempo, son énergie). C'est précisément l'objectif de notre étude : **évaluer à quel point les caractéristiques musicales pures (et notamment la dansabilité) impactent la popularité d'une chanson, indépendamment du budget marketing ou de la notoriété préalable de l'artiste.**
+Une première intuition — que les caractéristiques audio (rythme, énergie, dansabilité)
+suffisent à prédire le succès — s'avère empiriquement fausse. Notre analyse
+révèle que **aucune feature audio n'atteint une corrélation r > 0.07 avec la
+popularité brute**. Ce constat a orienté toute notre démarche vers une question
+plus fine : *dans quelle mesure peut-on prédire la position relative d'un morceau
+au sein de son propre genre, et quels facteurs (au-delà du son) l'expliquent ?*
 
 
 ## Objectif Analytique
 
+Notre objectif est de construire un **modèle unifié** capable de prédire le
+**rang percentile d'un morceau dans son genre** (`pop_rank_in_genre`, de 0 à 1),
+plutôt que sa popularité brute. Cette cible est plus pertinente car elle compare
+chaque morceau à sa vraie concurrence — les autres titres du même genre.
 
-Notre objectif principal est de prédire la popularité d'une chanson à 
-partir de ses caractéristiques musicales mesurables. La variable cible 
-est le score de `popularity` (de 0 à 100), ce qui en fait une tâche de 
-**régression**, complétée par une **classification binaire** via la 
-variable `is_popular` que nous avons créée.
+Pour ce faire, nous avons enrichi les 9 features audio Spotify existantes avec
+deux nouvelles variables construites sur les données disponibles :
 
-Pour enrichir notre analyse, nous avons également intégré des données 
-secondaires sur les genres musicaux, combinant ainsi deux sources 
-complémentaires. Nos analyses ont révélé un résultat surprenant : les 
-caractéristiques musicales n'expliquent qu'une partie de la popularité. 
-D'autres facteurs — la notoriété de l'artiste, le marketing ou 
-l'algorithme Spotify lui-même — semblent jouer un rôle tout aussi 
-décisif. Notre modèle de Machine Learning viendra confirmer ou infirmer 
-cette hypothèse.
+- **`artist_reputation`** : popularité moyenne de l'artiste sur l'ensemble de son catalogue dans le dataset
+- **`genre_distance`** : distance euclidienne entre le profil audio du morceau et le centroïde sonore moyen de son genre
+
+Un unique **RandomForestRegressor** est entraîné sur ces 13 features.
+L'analyse des résidus du modèle constitue la deuxième contribution majeure :
+les morceaux les plus mal prédits (surprises et déceptions) révèlent les
+facteurs non-audio qui gouvernent le succès musical.
 
 ---
 
@@ -116,23 +122,30 @@ Dans cette section, nous analysons les relations statistiques fondamentales qui 
 
 # Modélisation et Apprentissage {#sec-modelling}
 
-Le pipeline complet intègre à la fois la branche analytique tabulaire (Machine Learning) et la branche d'analyse visuelle ou de signaux complexes (Deep Learning CNN) :
+Le pipeline repose sur un modèle unique (**Modèle Unifié**) dont le diagramme
+ci-dessous détaille les étapes, du chargement des données brutes à l'analyse des
+anomalies de succès :
 
-```mermaid
+```{mermaid}
 graph TD
-    A[Données Brutes Multi-Sources CSV/API] -->|Formatage & Alignement| B(data_clean.clean_dates)
-    C[Données Externes Complémentaires] -->|Imputation & Interpolation| D(data_clean.impute_missing_values)
-    B & D -->|Gestion Outliers| E[Jeu de données Propre & Fusionné]
-    E -->|Extraction Temporelle/Caractéristiques| F[Feature Engineering]
-    F -->|Splits Temporels ou Stratifiés| G[Modèle Machine Learning Tabulaire]
-    H[Flux Multimédias Réels Images/Signaux] -->|Prétraitement d'images/signaux| I[Réseau Convolutif CNN TensorFlow]
-    G -->|Prédictions de la Problématique Métier| J[Livrables & Aide à la Décision]
-    I -->|Détection de Motifs Complexes| J
-    
+    A[97 270 morceaux Spotify] --> B[Feature Engineering]
+
+    B --> B1[artist_reputation]
+    B --> B2[pop_rank_in_genre - cible]
+    B --> B3[genre_distance]
+    B --> B4[9 features audio]
+
+    B1 & B2 & B3 & B4 --> C[Split Train 80 / Test 20]
+    C --> D[RandomForestRegressor]
+    D --> E[Rang relatif predit]
+
+    E --> F[R2=0.31 - MAE=0.196]
+    E --> G[Residus - Anomalies]
+    G --> H[67 pct reputation artiste]
+
+    style D fill:#fef3c7,stroke:#d97706,stroke-width:2px
     style E fill:#e0f2fe,stroke:#0284c7,stroke-width:2px
-    style J fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
-    style G fill:#fef3c7,stroke:#d97706,stroke-width:2px
-    style I fill:#fef3c7,stroke:#d97706,stroke-width:2px
+    style H fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
 ```
 
 ## Chapitre 5 : Travaux Pratiques de Modélisation (ML & DL)
@@ -248,13 +261,49 @@ Dans une démarche de transparence scientifique et académique, cette section d�
 
 # Conclusion Générale {#sec-conclusion}
 
-L'objectif initial de ce projet était de vérifier si des caractéristiques musicales, en particulier la **dansabilité (danceability)**, étaient suffisantes pour garantir le succès d'un titre, notamment à l'ère des trends sur les réseaux sociaux. 
+Ce projet avait pour ambition initiale de comprendre si les caractéristiques
+audio d'un morceau Spotify suffisaient à prédire son succès. La réponse, confirmée
+empiriquement à chaque étape, est sans appel : **non**.
 
-Nos phases d'Analyse Exploratoire (EDA) et de Modélisation ont révélé des résultats particulièrement intéressants :
-- **Une corrélation faible mais existante** : Contrairement aux idées reçues, la corrélation linéaire directe entre la `danceability` et la `popularity` n'est pas absolue (environ 0.06 dans nos données globales). Une musique "dansante" n'est donc pas automatiquement populaire.
-- **Le poids du contexte** : Nos modèles de Machine Learning démontrent que les caractéristiques audio seules ne suffisent pas à prédire parfaitement le succès (R² de 0.446). Les erreurs de prédiction parfois importantes (différence significative entre MAE et RMSE) prouvent que le succès est très volatil pour un même profil musical.
+## Résultats clés
 
-**Bilan métier** : Bien qu'avoir une musique avec une forte `danceability` soit un **prérequis** essentiel pour lancer une trend marketing (sur TikTok ou Reels), ce n'est pas le moteur principal de la popularité globale. Le succès final reste massivement dicté par des facteurs externes non-musicaux : la stratégie marketing du label, la base de fans existante de l'artiste et les algorithmes de recommandation des plateformes.
+| Résultat | Valeur |
+|---|---|
+| Corrélation max. audio → popularité | r = 0.07 (danceability) |
+| R² modèle audio seul (split séquentiel) | 0.230 |
+| R² modèle unifié (rang relatif + artist_reputation + genre_distance) | **0.310** |
+| Part expliquée par `artist_reputation` seul | **66.9 %** de l'importance |
+| Part totale des 9 features audio combinées | 25.9 % |
+
+## Enseignements
+
+1. **L'audio ne suffit pas** — aucune feature sonore ne dépasse r = 0.07 avec la
+   popularité brute. Tempo, énergie, dansabilité sont des caractéristiques
+   nécessaires mais non suffisantes.
+
+2. **La réputation artiste domine** — à elle seule, la popularité historique de
+   l'artiste dans le dataset explique ~67 % du pouvoir prédictif du modèle. Le
+   succès se joue sur *qui tu es* autant que sur *comment tu sonnes*.
+
+3. **La compétition est locale** — prédire un rang relatif dans le genre (plutôt
+   que la popularité absolue) est plus pertinent : un classique à 60 de popularité
+   peut être le meilleur titre de son genre, alors qu'un tube pop à 60 est dans
+   la moyenne.
+
+4. **Les anomalies sont révélatrices** — les morceaux que le modèle ne sait pas
+   expliquer (résidus élevés) sont les plus instructifs : les *surprise hits* comme
+   les collaborations virales (David Guetta × Becky Hill, Lizzo — About Damn Time)
+   ou les *déceptions* comme des classiques en perte de streaming (Green Day —
+   Basket Case, Ben E. King — Stand By Me) dessinent les contours de ce que le
+   modèle ne peut pas capturer — viralité, timing, phénomène culturel.
+
+## Bilan métier
+
+Le succès musical sur Spotify est **multi-factoriel et en grande partie
+non-prédictible par les données audio seules**. Pour un artiste ou un label, les
+leviers actionnables restent : construire une réputation durable (catalogue
+cohérent), cibler un genre avec un profil sonore identifiable, et accepter qu'une
+part irréductible du succès dépende de facteurs externes au son lui-même.
 
 ---
 

@@ -51,8 +51,8 @@ tasks:
   zip:
     desc: Compresse les logs et les scripts sources compilés en fichiers ZIP dans le dossier build
     cmds:
-      - (cd build && zip -r logs.zip logs)
-      - (cd build && zip -r sources.zip src)
+      - powershell -Command "Compress-Archive -Force -Path build/logs    -DestinationPath build/logs.zip"
+      - powershell -Command "Compress-Archive -Force -Path build/src     -DestinationPath build/sources.zip"
 
   preview:
     desc: Compile les notebooks puis démarre le serveur de prévisualisation dynamique Quarto

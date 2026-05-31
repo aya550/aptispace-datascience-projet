@@ -48,7 +48,7 @@ def _wrap_missing_imports(source_lines: list) -> list:
         elif s.startswith('from ') and ' import' in s and not s.startswith('#'):
             pkg = s.split()[1].split('.')[0]
 
-        if pkg and importlib.util.find_spec(pkg) is None:
+        if pkg and ',' not in pkg and importlib.util.find_spec(pkg) is None:
             _unavailable_names.update(_parse_import_names(s))
             indent = ' ' * (len(line) - len(line.lstrip()))
             result.append(f"{indent}try:\n")
@@ -112,7 +112,7 @@ for nb_file in notebook_files:
     qmd_lines = []
 
     py_lines.append("import os, sys")
-    py_lines.append(f"sys.path.append('{base_dir}')\n")
+    py_lines.append(f"sys.path.append(r'{base_dir}')\n")
 
     for cell in nb_data.get('cells', []):
         cell_type = cell.get('cell_type')
