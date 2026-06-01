@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     permissions:
       contents: write # Autorise le push automatique des commits par GitHub Actions
 
@@ -58,6 +58,13 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
+      - name: Cache Quarto tools (Typst)
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/quarto/tools
+          key: ${{ runner.os }}-quarto-tools-${{ hashFiles('_quarto.yml') }}
+          restore-keys: ${{ runner.os }}-quarto-tools-
+
       - name: Set up Go-Task
         uses: arduino/setup-task@v2.0.0
         with:
@@ -65,8 +72,12 @@ jobs:
 
       - name: Compile Notebooks and Render Quarto Report
         run: |
-          task render
-          task install-guide
+          python tools/compile_notebooks.py
+          quarto render report/rapport.qmd
+          python tools/compile_ojs_in_markdown.py build/report/rapport.md
+          rm -rf report/rapport_files/
+          python -c "import shutil; shutil.make_archive('build/logs',    'zip', 'build', 'logs')"
+          python -c "import shutil; shutil.make_archive('build/sources', 'zip', 'build', 'src')"
 
       - name: Create or Update GitHub Release
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
