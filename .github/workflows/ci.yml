@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: write # Autorise le push automatique des commits par GitHub Actions
 
@@ -30,12 +31,23 @@ jobs:
         uses: actions/setup-python@v5.6.0
         with:
           python-version: "3.12"
-          cache: "pip"
+
+      - name: Cache Python virtualenv
+        id: cache-venv
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('requirements.txt') }}
 
       - name: Install Python dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          python -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install -r requirements.txt
+
+      - name: Activate virtualenv
+        run: echo "$GITHUB_WORKSPACE/.venv/bin" >> $GITHUB_PATH
 
       - name: Configure Kaggle credentials
         run: |

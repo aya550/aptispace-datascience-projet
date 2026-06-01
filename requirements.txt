@@ -18,7 +18,6 @@ dash-bootstrap-components
 ipykernel
 jupyter
 jupyter-cache
-quarto
 
 # Pour importer les datasets
 kagglehub

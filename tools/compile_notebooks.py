@@ -130,81 +130,77 @@ for nb_file in notebook_files:
             if not source_str.strip():
                 continue
 
-            # Détecte les sorties visuelles sauvegardées (matplotlib/seaborn ou DataFrame HTML)
             cell_outputs = cell.get('outputs', [])
-            has_visual_output = any(
-                'image/png' in o.get('data', {})
-                or 'image/svg+xml' in o.get('data', {})
-                or (
-                    'text/html' in o.get('data', {})
-                    and 'dataframe' in ''.join(
-                        o['data']['text/html'] if isinstance(o['data']['text/html'], list)
-                        else [o['data']['text/html']]
-                    ).lower()
-                )
-                for o in cell_outputs
-                if o.get('output_type') in ('display_data', 'execute_result')
-            )
 
-            # Détermine si la cellule utilise des noms issus de packages absents
             source_has_eval_directive = any(
                 line.strip().startswith('#| eval:') for line in source
             )
-            skip_eval = not source_has_eval_directive and _cell_uses_unavailable(source)
+            # Toujours désactiver l'exécution : les outputs sont pré-embarqués dans le QMD
+            skip_eval = not source_has_eval_directive
 
-            # Transforme les imports de packages absents en try/except
             fixed_source = _wrap_missing_imports(source)
             fixed_source_str = "".join(fixed_source)
 
-            # --- Bloc QMD ---
+            # --- Bloc QMD (code affiché, non ré-exécuté si outputs présents) ---
             qmd_lines.append("```{python}\n")
             if skip_eval:
                 qmd_lines.append("#| eval: false\n")
-            source_has_output_directive = any(
-                line.strip().startswith('#| output:') for line in source
-            )
-            if not source_has_output_directive:
-                qmd_lines.append("#| output: true\n" if has_visual_output else "#| output: false\n")
+            qmd_lines.append("#| output: false\n")
             qmd_lines.append(fixed_source_str)
             if not fixed_source_str.endswith("\n"):
                 qmd_lines.append("\n")
             qmd_lines.append("```\n\n")
 
-            # Intégration des sorties Plotly sauvegardées (HTML interactif uniquement)
-            plotly_html = None
+            # --- Embed des outputs pré-calculés ---
             for output in cell_outputs:
-                data = output.get('data', {})
-                if 'application/vnd.plotly.v1+json' in data:
+                otype = output.get('output_type', '')
+                data  = output.get('data', {})
+
+                # Images matplotlib/seaborn (PNG base64)
+                if 'image/png' in data:
+                    png = data['image/png']
+                    if isinstance(png, list):
+                        png = ''.join(png)
+                    qmd_lines.append(f'![](data:image/png;base64,{png.strip()})\n\n')
+
+                # Plotly JSON interactif
+                elif 'application/vnd.plotly.v1+json' in data:
                     plotly_data = data['application/vnd.plotly.v1+json']
-                    fig_data = json.dumps(plotly_data.get('data', []))
+                    fig_data   = json.dumps(plotly_data.get('data', []))
                     fig_layout = json.dumps(plotly_data.get('layout', {}))
                     fig_config = json.dumps(plotly_data.get('config', {}))
-                    div_id = f"plotly-{uuid.uuid4()}"
+                    div_id     = f"plotly-{uuid.uuid4()}"
                     plotly_html = (
-                        f'<div id="{div_id}" style="width:100%; height:400px; '
-                        f'background: white; border-radius: 8px;"></div>\n'
-                        f'<script type="text/javascript">\n'
-                        f'  document.addEventListener("DOMContentLoaded", function() {{\n'
-                        f'    if (typeof Plotly !== "undefined") {{\n'
-                        f'      Plotly.newPlot("{div_id}", {fig_data}, {fig_layout}, {fig_config});\n'
-                        f'    }}\n'
-                        f'  }});\n'
-                        f'</script>\n'
+                        f'<div id="{div_id}" style="width:100%;height:400px;"></div>\n'
+                        f'<script>document.addEventListener("DOMContentLoaded",function(){{'
+                        f'if(typeof Plotly!=="undefined")Plotly.newPlot("{div_id}",{fig_data},{fig_layout},{fig_config});}});</script>\n'
                     )
-                    break
-                elif 'text/html' in data:
-                    html_lines = data['text/html']
-                    html_content = "".join(html_lines) if isinstance(html_lines, list) else html_lines
-                    if 'plotly' in html_content.lower() or 'plotly-graph-div' in html_content:
-                        plotly_html = html_content
-                        break
+                    qmd_lines.append('::: {.content-visible unless-format="typst"}\n')
+                    qmd_lines.append(plotly_html)
+                    qmd_lines.append(":::\n\n")
 
-            if plotly_html:
-                qmd_lines.append('::: {.content-visible unless-format="pdf"}\n')
-                qmd_lines.append(plotly_html)
-                if not plotly_html.endswith("\n"):
-                    qmd_lines.append("\n")
-                qmd_lines.append(":::\n\n")
+                # HTML Plotly alternatif
+                elif 'text/html' in data:
+                    html_lines   = data['text/html']
+                    html_content = "".join(html_lines) if isinstance(html_lines, list) else html_lines
+                    if 'plotly' in html_content.lower() or 'dataframe' in html_content.lower():
+                        qmd_lines.append('::: {.content-visible unless-format="typst"}\n')
+                        qmd_lines.append(html_content)
+                        if not html_content.endswith("\n"):
+                            qmd_lines.append("\n")
+                        qmd_lines.append(":::\n\n")
+
+                # Sorties texte (print, stdout)
+                elif otype == 'stream' and output.get('name') == 'stdout':
+                    text = ''.join(output.get('text', []))
+                    if text.strip():
+                        qmd_lines.append(f'```\n{text.rstrip()}\n```\n\n')
+
+                # text/plain simple (résultats)
+                elif 'text/plain' in data and otype == 'execute_result':
+                    text = ''.join(data['text/plain']) if isinstance(data['text/plain'], list) else data['text/plain']
+                    if text.strip() and not text.strip().startswith('<'):
+                        qmd_lines.append(f'```\n{text.rstrip()}\n```\n\n')
 
             # --- Script .py (commentaires sur les magics IPython) ---
             py_cell_lines = []
