@@ -3,6 +3,32 @@
 Étudiant(e) 1 : \[DANIELLE JAMILA KOAGNE NGANKAM], Étudiant(e) 2 : \[JACQUELINE MAPENZI\], Étudiant(e) 3 : \[Aya SGHAIER \]
 2026-05-18
 
+---
+
+## Consulter le rapport
+
+| Format | Accès |
+|--------|-------|
+| **HTML interactif** | [Télécharger depuis la dernière release](../../releases/latest) |
+| **PDF** | Générer en local avec `task pdf` (voir ci-dessous) |
+| **Ce README** | Version Markdown du rapport, générée automatiquement par le CI |
+
+> **Note pour les évaluateurs** — Le pipeline CI génère automatiquement le rapport HTML et ce README à chaque commit.
+> Le **rapport PDF** n'est pas produit en CI (volume de données trop important pour les runners GitHub).
+> Pour le générer localement :
+>
+> ```bash
+> # 1. Installer les dépendances
+> pip install -r requirements.txt
+>
+> # 2. Générer le PDF (via Typst)
+> task pdf
+>
+> # Le fichier est disponible dans : build/report/rapport.pdf
+> ```
+
+---
+
 - [Introduction et Contexte Métier](#sec-intro)
   - [Contexte du Projet](#contexte-du-projet)
   - [Objectif Analytique](#objectif-analytique)
