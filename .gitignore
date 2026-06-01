@@ -22,6 +22,11 @@ data/raw/*
 !data/raw/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+!data/processed/cleaned_data_sample.csv
+!data/processed/dataset_clean.csv
+!data/processed/rf_unified_model.pkl
+!data/processed/audio_scaler.pkl
+!data/processed/model_artifacts.json
 
 # Quarto & Rendu
 .quarto/
