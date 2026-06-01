@@ -135,6 +135,9 @@ for nb_file in notebook_files:
             source_has_eval_directive = any(
                 line.strip().startswith('#| eval:') for line in source
             )
+            source_has_output_directive = any(
+                line.strip().startswith('#| output:') for line in source
+            )
             # Toujours désactiver l'exécution : les outputs sont pré-embarqués dans le QMD
             skip_eval = not source_has_eval_directive
 
@@ -145,7 +148,8 @@ for nb_file in notebook_files:
             qmd_lines.append("```{python}\n")
             if skip_eval:
                 qmd_lines.append("#| eval: false\n")
-            qmd_lines.append("#| output: false\n")
+            if not source_has_output_directive:
+                qmd_lines.append("#| output: false\n")
             qmd_lines.append(fixed_source_str)
             if not fixed_source_str.endswith("\n"):
                 qmd_lines.append("\n")
