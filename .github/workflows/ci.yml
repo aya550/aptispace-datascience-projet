@@ -73,7 +73,8 @@ jobs:
       - name: Compile Notebooks and Render Quarto Report
         run: |
           python tools/compile_notebooks.py
-          quarto render report/rapport.qmd
+          quarto render report/rapport.qmd --to html
+          quarto render report/rapport.qmd --to gfm
           python tools/compile_ojs_in_markdown.py build/report/rapport.md
           rm -rf report/rapport_files/
           python -c "import shutil; shutil.make_archive('build/logs',    'zip', 'build', 'logs')"
@@ -99,7 +100,6 @@ jobs:
 
           # Create new rolling release with all assets
           gh release create latest \
-            build/report/rapport.pdf \
             build/report/rapport.html \
             build/report/README.md \
             build/logs.zip \
